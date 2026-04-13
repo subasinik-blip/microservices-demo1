@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "yourdockerhub/frontend:${BUILD_NUMBER}"
+        DOCKER_IMAGE = "subasinik/frontend:${BUILD_NUMBER}"
     }
 
     stages {
