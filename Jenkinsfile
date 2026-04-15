@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "subasinik/frontend:${BUILD_NUMBER}"
+        DOCKER_LATEST = "subasinik/frontend:latest"
     }
 
     stages {
@@ -13,15 +14,12 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            steps {
-                sh 'cd src/frontend && go build -o app .'
-            }
-        }
-
         stage('Docker Build') {
             steps {
-                sh 'cd src/frontend && docker build -t $DOCKER_IMAGE .'
+                sh '''
+                cd src/frontend
+                docker build -t $DOCKER_IMAGE -t $DOCKER_LATEST .
+                '''
             }
         }
 
@@ -29,7 +27,10 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://index.docker.io/v1/', 'docker-secret') {
-                        sh "docker push $DOCKER_IMAGE"
+                        sh '''
+                        docker push $DOCKER_IMAGE
+                        docker push $DOCKER_LATEST
+                        '''
                     }
                 }
             }
