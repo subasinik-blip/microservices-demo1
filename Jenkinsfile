@@ -33,7 +33,7 @@ pipeline {
         stage('Connect EC2') {
             steps {
                 bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "echo Connected"
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "echo Connected to EC2"
                 """
             }
         }
@@ -41,11 +41,15 @@ pipeline {
         stage('Setup EC2 Server') {
             steps {
                 bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "
-                sudo apt update &&
-                sudo apt install nginx -y &&
-                sudo systemctl start nginx
-                "
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "sudo apt update && sudo apt install nginx -y && sudo systemctl start nginx && echo Setup Done"
+                """
+            }
+        }
+
+        stage('Verify Server') {
+            steps {
+                bat """
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "systemctl is-active nginx"
                 """
             }
         }
