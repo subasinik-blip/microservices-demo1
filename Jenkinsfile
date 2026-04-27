@@ -16,7 +16,7 @@ pipeline {
 
         stage('Terraform Init') {
             steps {
-                dir('terraform') {
+                dir('C:/Users/DELL/terraform-aws-project') {
                     bat 'terraform init'
                 }
             }
@@ -24,7 +24,7 @@ pipeline {
 
         stage('Terraform Apply') {
             steps {
-                dir('terraform') {
+                dir('C:/Users/DELL/terraform-aws-project') {
                     bat 'terraform apply -auto-approve'
                 }
             }
@@ -33,7 +33,7 @@ pipeline {
         stage('Connect EC2') {
             steps {
                 bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "echo Connected to EC2"
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "echo Connected"
                 """
             }
         }
@@ -44,18 +44,7 @@ pipeline {
                 ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "
                 sudo apt update &&
                 sudo apt install nginx -y &&
-                sudo systemctl start nginx &&
-                echo Server Setup Complete
-                "
-                """
-            }
-        }
-
-        stage('Verify Server') {
-            steps {
-                bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "
-                systemctl status nginx | grep active
+                sudo systemctl start nginx
                 "
                 """
             }
