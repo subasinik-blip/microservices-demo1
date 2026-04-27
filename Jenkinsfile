@@ -41,7 +41,7 @@ pipeline {
         stage('Setup EC2 Server') {
             steps {
                 bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "sudo apt update && sudo apt install nginx -y && sudo systemctl start nginx && echo Setup Done"
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "sudo rm -f /etc/apt/sources.list.d/jenkins.list && sudo apt update || true && sudo apt install nginx -y && sudo systemctl start nginx && echo Setup Done"
                 """
             }
         }
