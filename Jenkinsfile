@@ -10,7 +10,7 @@ pipeline {
 
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/subasinik-blip/microservices-demo1.git'
+                git branch: 'main', url: 'https://github.com/subasinik-blip/microservices-demo1.git'
             }
         }
 
