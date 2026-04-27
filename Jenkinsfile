@@ -38,10 +38,25 @@ pipeline {
             }
         }
 
-        stage('Run Command in EC2') {
+        stage('Setup EC2 Server') {
             steps {
                 bat """
-                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "sudo apt update && echo Setup Done"
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "
+                sudo apt update &&
+                sudo apt install nginx -y &&
+                sudo systemctl start nginx &&
+                echo Server Setup Complete
+                "
+                """
+            }
+        }
+
+        stage('Verify Server') {
+            steps {
+                bat """
+                ssh -o StrictHostKeyChecking=no -i %KEY_PATH% ubuntu@%EC2_IP% "
+                systemctl status nginx | grep active
+                "
                 """
             }
         }
